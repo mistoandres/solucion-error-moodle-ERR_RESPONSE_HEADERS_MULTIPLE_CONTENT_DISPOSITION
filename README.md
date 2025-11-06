@@ -63,43 +63,43 @@ $this->writer->openToFile('php://output');
 ```
 **Propósito**: Escribir directamente a la salida HTTP sin que Spout envíe sus propios headers.
 
-## ¿Por Qué Funciona?
+## ¿Por qué funciona?
 
 La solución evita completamente el método `openToBrowser()` de Spout, que era el responsable de enviar headers duplicados. En su lugar:
 
-1. Limpiamos todos los buffers de salida
-2. Enviamos manualmente los headers necesarios **una sola vez**
-3. Usamos `openToFile('php://output')` para escribir directamente al navegador
+1. Limpiamos todos los buffers de salida.
+2. Enviamos manualmente los headers necesarios **una sola vez**.
+3. Usamos `openToFile('php://output')` para escribir directamente al navegador.
 
 Esto garantiza que solo se envíe **un único** header `Content-Disposition`, cumpliendo con el estándar HTTP.
 
 ## Compatibilidad
 
 ✅ **No afecta**:
-- Tests automáticos (BEHAT/PHPUNIT)
-- Exportación a archivos locales
-- Otras funcionalidades de descarga de Moodle
-- Plugins de terceros
+- Tests automáticos (BEHAT/PHPUNIT).
+- Exportación a archivos locales.
+- Otras funcionalidades de descarga de Moodle.
+- Plugins de terceros.
 
 ✅ **Solo afecta**:
-- Descargas de reportes de quiz (overview, responses, statistics)
-- Cualquier descarga que use dataformat (Excel, CSV, ODS)
+- Descargas de reportes de quiz (overview, responses, statistics).
+- Cualquier descarga que use dataformat (Excel, CSV, ODS).
 
 ## Seguridad
 
-- ✅ Los headers de seguridad se mantienen intactos
-- ✅ La validación de permisos no se modifica
-- ✅ El contenido del archivo no se ve afectado
-- ✅ Compatible con HTTP y HTTPS
+- ✅ Los headers de seguridad se mantienen intactos.
+- ✅ La validación de permisos no se modifica.
+- ✅ El contenido del archivo no se ve afectado.
+- ✅ Compatible con HTTP y HTTPS.
 
 ## Testing Realizado
 
 ### Funciona correctamente:
-- ✅ Descarga de reportes de quiz en formato Excel (.xlsx)
-- ✅ Descarga de reportes de quiz en formato CSV (.csv)
-- ✅ Descarga de reportes de quiz en formato ODS (.ods)
-- ✅ Navegadores: Chrome, Firefox, Edge, Safari
-- ✅ Conexiones HTTPS
+- ✅ Descarga de reportes de quiz en formato Excel (.xlsx).
+- ✅ Descarga de reportes de quiz en formato CSV (.csv).
+- ✅ Descarga de reportes de quiz en formato ODS (.ods).
+- ✅ Navegadores: Chrome, Firefox, Edge, Safari.
+- ✅ Conexiones HTTPS.
 
 ## Reversión (si necesario)
 
@@ -120,22 +120,4 @@ public function send_http_headers() {
     $this->renamecurrentsheet = true;
 }
 ```
-
-## Información Técnica
-
-- **Versión de Moodle**: Compatible con Moodle 3.x, 4.x
-- **Librerías afectadas**: Spout (Box/Spout)
-- **Fecha del fix**: Noviembre 2025
-- **Reportado por**: Sistema hseqvirtual.com
-- **Error original**: ERR_RESPONSE_HEADERS_MULTIPLE_CONTENT_DISPOSITION
-
-## Referencias
-
-- [RFC 6266 - Content-Disposition Header](https://tools.ietf.org/html/rfc6266)
-- [MDN - Content-Disposition](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Disposition)
-- [Chromium Issue - Multiple Content-Disposition](https://bugs.chromium.org/p/chromium/issues/detail?id=1010232)
-
-## Contacto
-
-Para preguntas o problemas relacionados con este fix, contactar al equipo de desarrollo de HSEQ Virtual.
 
